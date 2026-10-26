@@ -1,0 +1,18 @@
+# Maven build files
+
+target/
+
+# IntelliJ IDEA
+
+.idea/
+*.iml
+
+# Logs
+
+*.log
+
+# Local secrets
+
+.env
+application-local.properties
+

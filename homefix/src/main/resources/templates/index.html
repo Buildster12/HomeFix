@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>HomeFix | Reliable Home Services</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg main-navbar sticky-top">
+    <div class="container">
+
+        <a class="navbar-brand brand-logo" th:href="@{/}">
+            <span class="brand-icon">H</span>
+            HomeFix<span class="brand-dot">.</span>
+        </a>
+
+        <button class="navbar-toggler" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#homefixNavbar"
+                aria-controls="homefixNavbar"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="homefixNavbar">
+
+            <div class="navbar-nav nav-links ms-auto align-items-lg-center">
+
+                <a class="nav-link active" th:href="@{/}">Home</a>
+
+                <a class="nav-link" href="#services">Services</a>
+
+                <a class="nav-link" href="#why-homefix">About Us</a>
+
+                <a class="nav-link" href="#contact">Contact</a>
+
+                <!-- CUSTOMER NOT LOGGED IN -->
+                <th:block th:if="${session.loggedInCustomer == null}">
+
+                    <a class="nav-link"
+                       th:href="@{/customer/login}">
+                        Login
+                    </a>
+
+                    <a class="btn btn-dark nav-cta ms-lg-2"
+                       th:href="@{/customer/register}">
+                        Register
+                    </a>
+
+                </th:block>
+
+                <!-- CUSTOMER LOGGED IN -->
+                <th:block th:if="${session.loggedInCustomer != null}">
+
+                    <span class="nav-link fw-semibold">
+                        Hi,
+                        <span th:text="${session.loggedInCustomer.name}">
+                            Customer
+                        </span>
+                    </span>
+
+                    <a class="nav-link"
+                       th:href="@{/customer/my-bookings}">
+                        My Bookings
+                    </a>
+
+                    <form th:action="@{/customer/logout}"
+                          method="post"
+                          class="d-inline">
+
+                        <button type="submit"
+                                class="btn btn-outline-danger ms-lg-2">
+                            Logout
+                        </button>
+
+                    </form>
+
+                </th:block>
+
+            </div>
+
+        </div>
+    </div>
+</nav>
+
+
+<!-- HERO SECTION -->
+<section class="hero-section">
+
+    <div class="container">
+
+        <div class="row align-items-center g-5">
+
+            <div class="col-lg-6 hero-content">
+
+                <div class="hero-badge">
+                    <span class="status-dot"></span>
+                    YOUR TRUSTED HOME SERVICE PARTNER
+                </div>
+
+                <h1>
+                    Home repairs,
+                    <span>made simple.</span>
+                </h1>
+
+                <p class="hero-description">
+                    From everyday repairs to essential home maintenance,
+                    discover services designed to make your life easier.
+                </p>
+
+                <div class="hero-actions">
+
+                    <a href="#services" class="btn btn-primary-custom">
+                        Explore Services &rarr;
+                    </a>
+
+                    <a href="#why-homefix" class="btn btn-outline-custom">
+                        Why HomeFix?
+                    </a>
+
+                </div>
+
+                <div class="hero-trust">
+
+                    <div class="trust-icon">&#10003;</div>
+
+                    <div>
+                        <strong>Home services made easier</strong>
+                        <p>Convenient. Reliable. Hassle-free.</p>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-lg-6">
+
+                <div class="hero-visual">
+
+                    <div class="hero-decoration"></div>
+
+                    <div class="hero-image">
+                        <img
+                                src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=1000&q=80"
+                                alt="Professional home service technician">
+                    </div>
+
+                    <div class="floating-card floating-card-top">
+
+                        <div class="floating-icon purple-icon">&#10003;</div>
+
+                        <div>
+                            <strong>Quality Service</strong>
+                            <span>Care for your home</span>
+                        </div>
+
+                    </div>
+
+                    <div class="floating-card floating-card-bottom">
+
+                        <div class="floating-icon green-icon">&#8962;</div>
+
+                        <div>
+                            <strong>Your Home, Our Priority</strong>
+                            <span>Solutions for everyday needs</span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- SERVICES SECTION -->
+<section class="services-section" id="services">
+
+    <div class="container">
+
+        <div class="section-top">
+
+            <div>
+                <span class="section-label">WHAT WE OFFER</span>
+
+                <h2>
+                    Services for your
+                    <span>everyday needs.</span>
+                </h2>
+
+                <p class="section-description">
+                    Find the right service to keep your home running smoothly.
+                </p>
+            </div>
+
+            <div class="service-count">
+                <span class="count-dot"></span>
+                Available service categories
+            </div>
+
+        </div>
+
+
+        <!-- EMPTY DATABASE MESSAGE -->
+        <div class="empty-state"
+             th:if="${#lists.isEmpty(categories)}">
+
+            <h4>No services available yet</h4>
+
+            <p>Please check back soon for available home services.</p>
+
+        </div>
+
+
+        <!-- DYNAMIC SERVICE CARDS -->
+        <div class="row g-4"
+             th:if="${not #lists.isEmpty(categories)}">
+
+            <div class="col-md-6 col-lg-4"
+                 th:each="category : ${categories}"
+                 th:if="${category.active}">
+
+                <div class="service-card">
+
+                    <div class="service-card-top">
+
+                        <div class="service-icon purple">
+                            &#128295;
+                        </div>
+
+                        <span class="availability-badge available">
+                            Available
+                        </span>
+
+                    </div>
+
+                    <h3 th:text="${category.name}">
+                        Service Name
+                    </h3>
+
+                    <p class="service-card-description"
+                       th:text="${category.description}">
+                        Service description
+                    </p>
+
+                    <div class="service-card-footer">
+
+                        <span class="service-type">
+                            HOME SERVICE
+                        </span>
+
+                        <a th:href="@{/enquiry}"
+                           class="btn btn-primary-custom">
+                            Enquire &rarr;
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- WHY HOMEFIX -->
+<section class="why-section" id="why-homefix">
+
+    <div class="container">
+
+        <div class="why-heading text-center">
+
+            <span class="section-label">WHY HOMEFIX</span>
+
+            <h2>
+                Home services,
+                <br>
+                <span>without the hassle.</span>
+            </h2>
+
+            <p>
+                We aim to make finding and exploring home services
+                simple and convenient.
+            </p>
+
+        </div>
+
+
+        <div class="row g-4">
+
+            <div class="col-md-4">
+
+                <div class="why-card">
+
+                    <div class="why-icon icon-blue">&#10003;</div>
+
+                    <h5>Simple Experience</h5>
+
+                    <p>
+                        Explore available service categories
+                        from one convenient place.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-md-4">
+
+                <div class="why-card">
+
+                    <div class="why-icon icon-orange">&#9881;</div>
+
+                    <h5>Everyday Solutions</h5>
+
+                    <p>
+                        Find services for common household
+                        repair and maintenance needs.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-md-4">
+
+                <div class="why-card">
+
+                    <div class="why-icon icon-green">&#9829;</div>
+
+                    <h5>Home Comes First</h5>
+
+                    <p>
+                        Our goal is to make home maintenance
+                        easier to manage.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- FOOTER -->
+<footer class="main-footer" id="contact">
+
+    <div class="container">
+
+        <div class="footer-content">
+
+            <a class="brand-logo footer-logo" th:href="@{/}">
+                <span class="brand-icon">H</span>
+                HomeFix<span class="brand-dot">.</span>
+            </a>
+
+            <p>
+                Making everyday home services simpler.
+            </p>
+
+            <span class="footer-copy">
+                &copy; 2026 HomeFix. All rights reserved.
+            </span>
+
+        </div>
+
+    </div>
+
+</footer>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
